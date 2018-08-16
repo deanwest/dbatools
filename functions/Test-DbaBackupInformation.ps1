@@ -154,7 +154,16 @@ Function Test-DbaBackupInformation {
 			$allpaths = $DbHistory | Select-Object -ExpandProperty FullName
 			$allpaths_validity = Test-DbaSqlPath -SqlInstance $RestoreInstance -Path $allpaths
 			foreach ($path in $allpaths_validity) {
-				if ($path.FileExists -eq $false) {
+				
+				 if ($path -like 'http*') {
+					$deviceType = 'URL'
+					}
+					else {
+					    $deviceType = 'FILE'
+				}
+                
+				
+				if ($path.FileExists -eq $false -eq 'FILE') {
 					Write-Message -Message "Backup File $($path.FilePath) cannot be read" -Level Warning
 					$VerificationErrors++
 				}
